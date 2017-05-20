@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/ajvb/kala/client"
 	"github.com/ajvb/kala/job"
@@ -26,8 +28,15 @@ func main() {
 }
 
 func createJob(c *client.KalaClient) {
+	// construct the current time string
+	delay := rand.Int31n(60)
+	t := time.Now().
+		Add(time.Duration(delay) * time.Second).
+		Format("2006-01-02T15:04:05-07:00")
+	schedule := fmt.Sprintf("R2/%s/PT1S", t)
+	fmt.Println(schedule)
 	body := &job.Job{
-		Schedule: "R2/2017-05-18T01:31:00.828696-07:00/PT10S",
+		Schedule: schedule,
 		Name:     "test_job",
 		Command:  "curl 127.0.0.1:8080/hello",
 	}
